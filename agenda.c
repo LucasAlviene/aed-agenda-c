@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#teste
+//teste
 
 struct dados_struct{
     int id;
