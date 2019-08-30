@@ -1,7 +1,5 @@
 #include <stdio.h>
 
-//teste22
-
 struct dados_struct{
     int id;
     char nome[50];
