@@ -7,6 +7,8 @@ void imprimir(void *pBuffer);
 void add(void *pBuffer);
 void remover(void *pBuffer);
 
+void insertionSort(void *pBuffer);
+
 struct info{
     int id;
     int telefone;
@@ -55,6 +57,13 @@ int main(){
                 pBuffer = realloc(pBuffer,(sizeof(int) * PR + (sizeof(Pessoa) * (*qnt))));
                 escolha = (int *)(pBuffer);
                 qnt = (int *)(pBuffer + sizeof(int));
+            break;
+            case 5:
+                pBuffer = realloc(pBuffer,(sizeof(int) * PR + (sizeof(Pessoa) * (*qnt+1))) + sizeof(int));
+                escolha = (int *)(pBuffer);
+                qnt = (int *)(pBuffer + sizeof(int));
+                insertionSort(pBuffer);
+
             break;
         }
         printf("\n\n");
@@ -105,6 +114,26 @@ void buscar(void *pBuffer){
 
 }
 
+void insertionSort(void *pBuffer){ 
+    int *i, *j,*qnt; 
+    Pessoa *pInicio,*pProximo,*pAux;
+    qnt = (int *)(pBuffer + sizeof(int));
+    i = (int *)(pBuffer + sizeof(int)*2);
+    j = (int *)(pBuffer + sizeof(int) * PR + sizeof(char) * 20 + sizeof(Pessoa) * (*qnt)+1);
+    pAux = (Pessoa *)(pBuffer + sizeof(int) * PR + sizeof(char) * 20 + sizeof(Pessoa) * (*qnt));
+
+    for (*i = 1; *i < *qnt; *(i)++) { 
+        pInicio = (Pessoa *)(pBuffer + sizeof(int) * PR + sizeof(Pessoa) * *i); 
+        *pAux = *pInicio;
+        *j = *i - 1; 
+        while (*j >= 0 && strcmp(pInicio,pProximo) == 1) { 
+            pProximo = (Pessoa *)(pBuffer + sizeof(int) * PR + sizeof(Pessoa) * *j);
+            *pInicio = *pProximo;
+            *j = *j - 1; 
+        } 
+        *pProximo = *pAux; 
+    } 
+} 
 
 void imprimir(void *pBuffer){
     int *i,*qnt;
