@@ -32,12 +32,10 @@ int main(){
         printf(" -- MENU --\n1 - Adicionar\n2 - Imprimir\n3 - Procurar\n4 - Remover\nEscolha um numero: ");
 
         scanf("%d",escolha);
-
         switch (*escolha)
         {
             case 1:
-                pBuffer = realloc(pBuffer,(sizeof(int) * PR + (sizeof(Pessoa) * (*qnt))));
-                escolha = (int *)(pBuffer);
+                pBuffer = realloc(pBuffer,(sizeof(int) * PR + sizeof(Pessoa) * (*qnt)));
                 qnt = (int *)(pBuffer + sizeof(int));
                 add(pBuffer);
                 (*qnt)++;
@@ -46,28 +44,31 @@ int main(){
                 imprimir(pBuffer);
             break;
             case 3:
-                pBuffer = realloc(pBuffer,(sizeof(int) * PR + (sizeof(Pessoa) * (*qnt))) + sizeof(char) * 20);
+                pBuffer = realloc(pBuffer,(sizeof(int) * PR + (sizeof(Pessoa) * (*qnt+1))) + sizeof(char) * 20);
                 escolha = (int *)(pBuffer);
                 qnt = (int *)(pBuffer + sizeof(int));
                 buscar(pBuffer);
             break;
             case 4:
-                pBuffer = realloc(pBuffer,(sizeof(int) * PR + (sizeof(Pessoa) * ((*qnt)+1))) + sizeof(char) * 20);
+                pBuffer = realloc(pBuffer,(sizeof(int) * PR + (sizeof(Pessoa) * (*qnt+1))) + sizeof(char) * 20);
                 buscar(pBuffer);
                 pBuffer = realloc(pBuffer,(sizeof(int) * PR + (sizeof(Pessoa) * (*qnt))));
                 escolha = (int *)(pBuffer);
                 qnt = (int *)(pBuffer + sizeof(int));
             break;
             case 5:
-                pBuffer = realloc(pBuffer,(sizeof(int) * PR + (sizeof(Pessoa) * (*qnt+1))) + sizeof(int));
+                pBuffer = realloc(pBuffer,(sizeof(int) * PR + (sizeof(Pessoa) * (*qnt))));
                 escolha = (int *)(pBuffer);
                 qnt = (int *)(pBuffer + sizeof(int));
-                insertionSort(pBuffer);
+              // insertionSort(pBuffer);
 
             break;
-        }
+        }        
         printf("\n\n");
+        escolha = (int *)(pBuffer);
+
     }while(*escolha != 0);
+    free(pBuffer);
 }
 
 void remover(void *pBuffer){
@@ -79,7 +80,7 @@ void remover(void *pBuffer){
 
     pAux = (Pessoa *)(pBuffer + sizeof(int) * PR + sizeof(char) * 20 + sizeof(Pessoa) * (*qnt)+1);
     while(*i<*qnt){
-        pInicio = (Pessoa *)(pBuffer + sizeof(int) * PR + sizeof(char) * 20 + sizeof(Pessoa) * *i);
+        pInicio = (Pessoa *)(pBuffer + sizeof(int) * PR + sizeof(char) * 20 + sizeof(Pessoa) * (*i));
         pProximo = (Pessoa *)(pBuffer + sizeof(int) * PR + sizeof(char) * 20 + sizeof(Pessoa) * (*i+1));
         *pAux = *pInicio;
         *pProximo = *pInicio;
@@ -87,6 +88,7 @@ void remover(void *pBuffer){
         (*i)++;
     }
     (*qnt)--;
+    printf(" -- Usuario removido -- \n");
 }
 
 void buscar(void *pBuffer){
@@ -97,7 +99,7 @@ void buscar(void *pBuffer){
     escolha = (int *)(pBuffer);
     qnt = (int *)(pBuffer + sizeof(int));
     i = (int *)(pBuffer + sizeof(int)*2);
-    nome = (char *)(pBuffer + sizeof(int)* PR + sizeof(Pessoa) * *qnt);
+    nome = (char *)(pBuffer + sizeof(int)* PR + sizeof(Pessoa) * (*qnt+1));
     *i = 0;
     printf(" -- Procurar contato --\n");
     printf("Digite o nome: ");
@@ -120,7 +122,6 @@ void insertionSort(void *pBuffer){
     qnt = (int *)(pBuffer + sizeof(int));
     i = (int *)(pBuffer + sizeof(int)*2);
     j = (int *)(pBuffer + sizeof(int) * PR + sizeof(char) * 20 + sizeof(Pessoa) * (*qnt)+1);
-    pAux = (Pessoa *)(pBuffer + sizeof(int) * PR + sizeof(char) * 20 + sizeof(Pessoa) * (*qnt));
 
     for (*i = 1; *i < *qnt; *(i)++) { 
         pInicio = (Pessoa *)(pBuffer + sizeof(int) * PR + sizeof(Pessoa) * *i); 
@@ -144,7 +145,7 @@ void imprimir(void *pBuffer){
     *i = 0;
     printf(" -- Lista de contatos --\n");
     while(*i<*qnt){
-        pInicio = (Pessoa *)(pBuffer + sizeof(int) * PR + sizeof(Pessoa) * *i);
+        pInicio = (Pessoa *)(pBuffer + sizeof(int) * PR + sizeof(Pessoa) * (*i));
         printf("Nome: %s\nTelefone:%d\n",pInicio->nome,pInicio->telefone);
         (*i)++;
     }
